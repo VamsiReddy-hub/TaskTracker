@@ -1,0 +1,70 @@
+Hi Replit AI 👋,
+
+I am working on a task-based assignment for a company. Below are my **goals, context, and instructions**. Please follow everything precisely so I can complete this project smoothly before my agent trial ends.
+
+---
+
+🔧 **Assignment**: Real-Time Location Tracker for a Multi-vendor Delivery Platform
+
+🗂️ Tech Stack:
+- Frontend: Next.js + TypeScript
+- Backend: Node.js + Express + TypeScript
+- Real-time: WebSockets using Socket.IO
+- Map: Leaflet.js (OpenStreetMap preferred)
+- Auth: JWT or session-based
+- DB: MongoDB Atlas or PostgreSQL
+
+---
+
+✅ **What I Want:**
+
+1. Set up a **monorepo project** with:
+   - `/frontend`: Next.js project
+   - `/backend`: Node.js + Express project
+   - `/shared`: Shared types/interfaces (optional)
+   
+2. ✅ Backend must include:
+   - APIs for vendor, delivery partner signup/login
+   - Assigning delivery partner to orders
+   - Location update and retrieval endpoints
+   - Socket.IO server for pushing location updates
+
+3. ✅ Frontend must include:
+   - Vendor dashboard to assign delivery partners
+   - Delivery partner dashboard with “Start Delivery” that sends location every 2-3s
+   - Customer page with real-time map updates via Leaflet.js
+
+4. ✅ Add JWT authentication with role-based access (vendor, delivery, customer).
+
+5. ✅ Use `.env` properly and ask for **all API keys and secrets needed up front**, like:
+   - MongoDB URI or PostgreSQL URI
+   - JWT secret
+   - (If used) Google Maps API key
+
+6. ✅ Ensure the app works on Replit **and** after I download the ZIP and run it in **VS Code locally**.
+
+---
+
+⚠️ **Issues I encountered previously**:
+- Replit sign-in not working
+- Sessions/JWT failed randomly
+- Couldn't track what env values were missing
+- Deployment/export didn’t work locally
+- GitHub commits were incomplete
+
+❗ I want to **avoid these problems**.
+
+---
+
+📦 Expected Output:
+- Working monorepo with proper structure
+- `.env.example` file with all needed keys
+- Instructions to run both frontend and backend
+- Working `socket.ts` logic and `map.tsx` Leaflet component
+- Basic styling is fine, functionality matters more
+
+---
+
+⏰ Time is limited. Please be efficient and generate everything cleanly so I can push this to GitHub and finish before the agent trial ends.
+
+Thanks!
