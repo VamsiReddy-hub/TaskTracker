@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { apiRequest } from "./queryClient";
 import { useLocation } from "wouter";
+import { socketService } from "./socket";
 
 interface User {
   id: number;
@@ -42,6 +43,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
+        
+        // Connect to WebSocket for real-time updates
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          socketService.connect(token);
+        }
       } else {
         localStorage.removeItem('auth_token');
       }
