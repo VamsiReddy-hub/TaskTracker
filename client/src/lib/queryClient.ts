@@ -38,11 +38,13 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     const token = localStorage.getItem('auth_token');
     
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    
     const res = await fetch(queryKey[0] as string, {
-      headers: Object.assign(
-        {},
-        token ? { "Authorization": `Bearer ${token}` } : {}
-      ),
+      headers,
       credentials: "include",
     });
 
