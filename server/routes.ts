@@ -92,17 +92,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password: hashedPassword
       });
 
-      // Create role-specific profile
-      if (userData.role === 'vendor' && req.body.vendorData) {
-        const vendorData = insertVendorSchema.parse(req.body.vendorData);
+      // Create role-specific profile automatically
+      if (userData.role === 'vendor') {
+        const vendorData = req.body.vendorData || {};
         await storage.createVendor({
-          ...vendorData,
+          businessName: vendorData.businessName || `${user.fullName}'s Business`,
+          address: vendorData.address || 'Address not provided',
+          description: vendorData.description || 'No description provided',
           userId: user.id
         });
-      } else if (userData.role === 'delivery' && req.body.partnerData) {
-        const partnerData = insertDeliveryPartnerSchema.parse(req.body.partnerData);
+      } else if (userData.role === 'delivery') {
+        const partnerData = req.body.partnerData || {};
         await storage.createDeliveryPartner({
-          ...partnerData,
+          vehicleType: partnerData.vehicleType || 'motorcycle',
+          licenseNumber: partnerData.licenseNumber || 'LIC123456',
           userId: user.id
         });
       }
@@ -404,6 +407,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stats for vendor dashboard
+  // Quick setup endpoint to fix missing profiles
+  app.post("/api/setup/fix-profile", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const user = await storage.getUser(req.user!.id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      if (user.role === 'vendor') {
+        const existingVendor = await storage.getVendorByUserId(user.id);
+        if (!existingVendor) {
+          await storage.createVendor({
+            businessName: `${user.fullName}'s Restaurant`,
+            address: '123 Business St, New York, NY',
+            description: 'Great food delivery',
+            userId: user.id
+          });
+        }
+      } else if (user.role === 'delivery') {
+        const existingPartner = await storage.getDeliveryPartnerByUserId(user.id);
+        if (!existingPartner) {
+          await storage.createDeliveryPartner({
+            vehicleType: 'motorcycle',
+            licenseNumber: 'DL123456',
+            userId: user.id
+          });
+        }
+      }
+
+      res.json({ message: 'Profile fixed successfully!' });
+    } catch (error) {
+      console.error('Profile fix error:', error);
+      res.status(500).json({ message: 'Failed to fix profile' });
+    }
+  });
+
   app.get("/api/stats/vendor", authenticateToken, requireRole(['vendor']), async (req: AuthenticatedRequest, res) => {
     try {
       if (!req.user!.vendorId) {
